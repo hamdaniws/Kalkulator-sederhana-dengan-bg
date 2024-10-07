@@ -12,7 +12,7 @@ window.title('Calculator')
 window.attributes('-fullscreen', True)
 
 # Membaca gambar background menggunakan PIL
-bg_image = Image.open("sakura.jpeg")
+bg_image = Image.open("BlueAikatsu.png")
 bg_image = bg_image.resize((window.winfo_screenwidth(), window.winfo_screenheight()), Image.Resampling.LANCZOS)
 bg_photo = ImageTk.PhotoImage(bg_image)
 
@@ -36,6 +36,9 @@ def myclick(number):
 # Fungsi untuk menghitung hasil
 def equal():
     try:
+        expression = entry.get()
+        # Replace the unicode multiplication and division signs if any
+        expression = expression.replace('×', '*').replace('÷', '/')
         y = str(eval(entry.get()))
         entry.delete(0, tk.END)
         entry.insert(0, y)
@@ -65,7 +68,7 @@ def insert_neg():
     entry.insert(tk.END, '-')
 
 # Fungsi untuk menghitung pangkat
-def power():
+def pangkat():
     current_text = entry.get()
     if current_text:  # Cek apakah entry tidak kosong
         entry.insert(tk.END, "**")
@@ -74,14 +77,72 @@ def power():
 def percentage():
     try:
         current_text = entry.get()
-        if current_text:
-            result = str(eval(current_text) / 100)
-            entry.delete(0, tk.END)
-            entry.insert(0, result)
-    except:
+        if not current_text:
+            return
+
+        # Define operators
+        operators = ['+', '-', '*', '/']
+        last_operator_pos = -1
+        last_operator = ''
+
+        # Find the last operator in the expression
+        for op in operators:
+            pos = current_text.rfind(op)
+            if pos > last_operator_pos:
+                last_operator_pos = pos
+                last_operator = op
+
+        if last_operator_pos == -1:
+            # No operator found, treat the entire number as a percentage
+            number = float(current_text)
+            result = str(number * 0.01)
+        else:
+            # Get the number before and after the last operator
+            before_op = current_text[:last_operator_pos]
+            after_op = current_text[last_operator_pos+1:]
+
+            # Handle cases where there might be multiple operators in a row
+            if not before_op:
+                # If there's no number before the operator, treat the percentage as 0
+                number_before = 0
+            else:
+                # Extract the last number before the operator
+                tokens = before_op.strip().split()
+                try:
+                    number_before = float(before_op.split()[-1])
+                except:
+                    # Fallback if splitting by space doesn't work
+                    number_before = float(before_op)
+
+            # Extract the last number after the operator
+            if not after_op:
+                return  # Nothing to convert
+            try:
+                number = float(after_op)
+            except:
+                # If the after_op is not a valid number, do nothing
+                return
+
+            # Calculate the percentage based on the operator
+            if last_operator in ['+', '-']:
+                percent_value = number_before * (number / 100)
+            elif last_operator in ['*', '/']:
+                percent_value = number * 0.01
+            else:
+                percent_value = number * 0.01  # Default case
+
+            # Replace the last number with the percentage value
+            new_expression = current_text[:last_operator_pos+1] + str(percent_value)
+            result = new_expression
+
+        entry.delete(0, tk.END)
+        entry.insert(0, result)
+    except Exception as e:
+        print(f"Percentage Error: {e}")
         tkinter.messagebox.showinfo("Error", "Syntax Error")
 
-# Pembuatan tombol angka dan operasi
+
+# Pembuatan tombol angka
 button_1 = tk.Button(master=frame, text='1', padx=15, pady=5, width=3, font=(50), command=lambda: myclick(1))
 button_1.grid(row=1, column=1, pady=2, sticky="nsew")
 button_2 = tk.Button(master=frame, text='2', padx=15, pady=5, width=3, font=(50), command=lambda: myclick(2))
@@ -105,6 +166,7 @@ button_0.grid(row=4, column=1, pady=2, sticky="nsew", columnspan=2)
 button_00 = tk.Button(master=frame, text='00', padx=15, pady=5, width=3, font=(50), command=lambda: myclick('00'))
 button_00.grid(row=4, column=3, pady=2, sticky="nsew")
 
+#button kalkulasi
 button_add = tk.Button(master=frame, text="+", padx=15, pady=5, width=3, font=(50), command=lambda: myclick('+'))
 button_add.grid(row=1, column=4, pady=2, sticky="nsew")
 button_subtract = tk.Button(master=frame, text="-", padx=15, pady=5, width=3, font=(50), command=lambda: myclick('-'))
@@ -125,7 +187,7 @@ button_neg = tk.Button(master=frame, text="(-", padx=15, pady=5, width=3, font=(
 button_neg.grid(row=2, column=0, pady=2, sticky="nsew")
 button_comma = tk.Button(master=frame, text=".", padx=15, pady=5, width=3, font=(50), command=lambda: myclick('.'))
 button_comma.grid(row=3, column=0, pady=2, sticky="nsew")
-button_pangkat = tk.Button(master=frame, text="^", padx=15, pady=5, width=3, font=(50), command=power)
+button_pangkat = tk.Button(master=frame, text="^", padx=15, pady=5, width=3, font=(50), command=pangkat)
 button_pangkat.grid(row=4, column=0, pady=2, sticky="nsew")
 # Tombol Persentase
 button_percentage = tk.Button(master=frame, text="%", padx=15, pady=5, width=3, font=(50), command=percentage)
