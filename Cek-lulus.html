@@ -1,0 +1,89 @@
+<html>
+<head>
+    <title>Cek Kelulusan</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: url('BlueAikatsu.png') no-repeat center center fixed;
+            background-size: cover;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .content {
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+            color: white;
+            width: 400px;
+        }
+        .content input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+        }
+        .content button {
+            width: 100%;
+            padding: 10px;
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .content button:hover {
+            background-color: #34495e;
+        }
+        .result {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div>
+                <label>Masukkan Nilai Bahasa Indonesia:</label>
+                <input type="text" id="nilai_bahasa" />
+            </div>
+            <div>
+                <label>Masukkan Nilai Matematika:</label>
+                <input type="text" id="nilai_matematika" />
+            </div>
+            <div>
+                <label>Masukkan Nilai IPA:</label>
+                <input type="text" id="nilai_ipa" />
+            </div>
+            <button onclick="cekKelulusan()">Cek Kelulusan</button>
+            <div class="result">
+                <div>Total Nilai: <span id="total_nilai"></span></div>
+                <div>Rata - Rata: <span id="rata_rata"></span></div>
+                <div>Kelulusan: <span id="kelulusan"></span></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function cekKelulusan() {
+            var nilaiBahasa = parseInt(document.getElementById('nilai_bahasa').value);
+            var nilaiMatematika = parseInt(document.getElementById('nilai_matematika').value);
+            var nilaiIpa = parseInt(document.getElementById('nilai_ipa').value);
+
+            var totalNilai = nilaiBahasa + nilaiMatematika + nilaiIpa;
+            var rataRata = totalNilai / 3;
+            var kelulusan = rataRata >= 60 ? 'Lulus' : 'Tidak Lulus';
+
+            document.getElementById('total_nilai').innerText = totalNilai.toFixed(0);
+            document.getElementById('rata_rata').innerText = rataRata.toFixed(0);
+            document.getElementById('kelulusan').innerText = kelulusan;
+        }
+    </script>
+</body>
+</html>
