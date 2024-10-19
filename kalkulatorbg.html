@@ -2,54 +2,64 @@
 <head>
     <title>Calculator</title>
     <style>
+        /* Style untuk body halaman */
         body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background: url('BlueAikatsu.png') no-repeat center center fixed;
-            background-size: cover;
+            margin: 0; /* Hilangkan margin default dari body */
+            padding: 0; /* Hilangkan padding default dari body */
+            display: flex; /* Menggunakan Flexbox untuk tata letak yang responsif */
+            justify-content: center; /* Pusatkan elemen secara horizontal */
+            align-items: center; /* Pusatkan elemen secara vertikal */
+            height: 100vh; /* Buat body setinggi tampilan browser */
+            background: url('BlueAikatsu.png') no-repeat center center fixed; /* Menetapkan gambar latar belakang yang tetap dan terpusat */
+            background-size: cover; /* Gambar latar disesuaikan agar menutupi seluruh area */
         }
+
+        /* Style untuk kontainer kalkulator */
         .calculator {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            padding: 20px;
-            background: rgba(0, 0, 255, 0.5);
-            border-radius: 10px;
+            display: grid; /* Menggunakan grid untuk menata tombol kalkulator */
+            grid-template-columns: repeat(4, 1fr); /* Membagi area menjadi 4 kolom dengan lebar yang sama */
+            gap: 10px; /* Jarak antar elemen grid */
+            padding: 20px; /* Padding di dalam kalkulator */
+            background: rgba(0, 0, 255, 0.5); /* Warna latar belakang biru transparan */
+            border-radius: 10px; /* Sudut kontainer dibulatkan */
         }
+
+        /* Style untuk input text (display kalkulator) */
         .calculator input[type="text"] {
-            grid-column: span 3;
-            height: 30px;
-            text-align: right;
-            font-size: 24px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            padding: 10px;
-            background-color: rgba(0, 0, 255, 0.5);
-            color: white;
-            background: transparent;
+            grid-column: span 3; /* Input display mencakup tiga kolom grid */
+            height: 30px; /* Tinggi input */
+            text-align: right; /* Teks diatur rata kanan */
+            font-size: 24px; /* Ukuran font teks */
+            border: 1px solid #ccc; /* Border input */
+            border-radius: 5px; /* Membulatkan sudut input */
+            padding: 10px; /* Padding dalam input */
+            background-color: rgba(0, 0, 255, 0.5); /* Warna background dengan sedikit transparansi */
+            color: white; /* Warna teks pada display kalkulator */
+            background: transparent; /* Membuat latar belakang transparan */
         }
+
+        /* Style untuk tombol kalkulator */
         .calculator input[type="button"] {
-            height: 50px;
-            font-size: 24px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background: skyblue;
-            cursor: pointer;
-            color: white; /* Change text color for the display */
-            background: transparent;
+            height: 50px; /* Tinggi tombol */
+            font-size: 24px; /* Ukuran teks pada tombol */
+            border: 1px solid #ccc; /* Border tombol */
+            border-radius: 5px; /* Membulatkan sudut tombol */
+            background: skyblue; /* Warna latar belakang tombol */
+            cursor: pointer; /* Ubah kursor menjadi pointer saat hover */
+            color: white; /* Warna teks pada tombol */
+            background: transparent; /* Membuat latar belakang transparan */
         }
+
+        /* Efek hover untuk tombol */
         .calculator input[type="button"]:hover {
-            background: rgba(0, 0, 255, 0.5);
+            background: rgba(0, 0, 255, 0.5); /* Mengubah background menjadi lebih gelap saat dihover */
         }
+
+        /* Style untuk tombol equal (=) */
         .calculator .equal {
-            grid-column: span 4;
-            background: #fff;
+            grid-column: span 4; /* Tombol "=" mencakup 4 kolom grid penuh */
+            background: #fff; /* Warna background tombol sama dengan putih */
         }
-        
     </style>
 </head>
 <body>
@@ -80,44 +90,48 @@
     </div>
 
     <script>
+        // Fungsi untuk menambahkan nilai ke dalam display kalkulator
         function appendToDisplay(value) {
-            const display = document.getElementById('display');
-            display.value += value;
+            const display = document.getElementById('display'); // Ambil elemen input dengan ID 'display'
+            display.value += value; // Tambahkan nilai yang ditekan pada display
         }
 
+        // Fungsi untuk membersihkan seluruh isi display
         function clearDisplay() {
-            const display = document.getElementById('display');
-            display.value = '';
+            const display = document.getElementById('display'); // Ambil elemen input dengan ID 'display'
+            display.value = ''; // Kosongkan isi display
         }
 
+        // Fungsi untuk menghapus karakter terakhir pada display
         function deleteLastCharacter() {
-            const display = document.getElementById('display');
-            display.value = display.value.slice(0, -1); // Remove the last character
+            const display = document.getElementById('display'); // Ambil elemen input dengan ID 'display'
+            display.value = display.value.slice(0, -1); // Hapus karakter terakhir
         }
 
+        // Fungsi untuk menghitung hasil dari ekspresi aritmatika yang ada di display
         function calculateResult() {
-            const display = document.getElementById('display');
+            const display = document.getElementById('display'); // Ambil elemen input dengan ID 'display'
             try {
-                display.value = eval(display.value);
+                display.value = eval(display.value); // Evaluasi ekspresi matematika di dalam display
             } catch (error) {
-                display.value = 'Error';
+                display.value = 'Error'; // Jika terjadi kesalahan, tampilkan 'Error'
             }
         }
 
         // Fungsi untuk menghitung persentase
         function calculatePercentage() {
             try {
-                let currentText = display.value;
-                if (!currentText) return;
+                let currentText = display.value; // Ambil nilai saat ini pada display
+                if (!currentText) return; // Jika tidak ada teks, keluar dari fungsi
 
-                // Operator yang diperbolehkan
+                // Daftar operator yang diperbolehkan
                 const operators = ['+', '-', '*', '/'];
-                let lastOperatorIndex = -1;
-                let lastOperator = '';
+                let lastOperatorIndex = -1; // Index operator terakhir yang ditemukan
+                let lastOperator = ''; // Operator terakhir yang ditemukan
 
                 // Cari operator terakhir dalam ekspresi
                 for (let op of operators) {
-                    let pos = currentText.lastIndexOf(op);
+                    let pos = currentText.lastIndexOf(op); // Cari posisi operator terakhir
                     if (pos > lastOperatorIndex) {
                         lastOperatorIndex = pos;
                         lastOperator = op;
@@ -125,34 +139,34 @@
                 }
 
                 if (lastOperatorIndex === -1) {
-                    // Tidak ada operator ditemukan, seluruh nomor dianggap sebagai persentase
-                    let number = parseFloat(currentText);
-                    display.value = (number * 0.01).toString();
+                    // Jika tidak ada operator, seluruh nomor dianggap sebagai persentase
+                    let number = parseFloat(currentText); // Konversi teks menjadi angka
+                    display.value = (number * 0.01).toString(); // Hitung persentase
                 } else {
-                    // Ambil nomor sebelum dan sesudah operator
-                    let beforeOp = currentText.slice(0, lastOperatorIndex);
-                    let afterOp = currentText.slice(lastOperatorIndex + 1);
+                    // Ambil bagian angka sebelum dan sesudah operator
+                    let beforeOp = currentText.slice(0, lastOperatorIndex); // Angka sebelum operator
+                    let afterOp = currentText.slice(lastOperatorIndex + 1); // Angka setelah operator
 
-                    // Jika tidak ada angka setelah operator, berhenti
+                    // Jika tidak ada angka setelah operator, keluar dari fungsi
                     if (!afterOp) return;
 
-                    let numberBefore = parseFloat(beforeOp) || 0;
-                    let number = parseFloat(afterOp);
+                    let numberBefore = parseFloat(beforeOp) || 0; // Konversi bagian sebelum operator menjadi angka
+                    let number = parseFloat(afterOp); // Konversi bagian setelah operator menjadi angka
 
-                    // Hitung persentase berdasarkan operator
+                    // Hitung persentase berdasarkan operator yang ditemukan
                     let percentValue;
                     if (lastOperator === '+' || lastOperator === '-') {
-                        percentValue = numberBefore * (number / 100);
+                        percentValue = numberBefore * (number / 100); // Untuk penjumlahan dan pengurangan
                     } else if (lastOperator === '*' || lastOperator === '/') {
-                        percentValue = number * 0.01;
+                        percentValue = number * 0.01; // Untuk perkalian dan pembagian
                     }
 
-                    // Ganti angka terakhir dengan nilai persentase
+                    // Ganti angka terakhir dengan nilai persentase yang dihitung
                     let newExpression = currentText.slice(0, lastOperatorIndex + 1) + percentValue.toString();
-                    display.value = newExpression;
+                    display.value = newExpression; // Tampilkan ekspresi baru
                 }
             } catch (error) {
-                display.value = 'Error';
+                display.value = 'Error'; // Jika terjadi kesalahan, tampilkan 'Error'
             }
         }
     </script>
