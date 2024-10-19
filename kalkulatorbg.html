@@ -59,7 +59,7 @@
         <input type="button" value="C" onclick="clearDisplay()">
         <input type="button" value="(" onclick="appendToDisplay('(')">
         <input type="button" value=")" onclick="appendToDisplay(')')">
-        <input type="button" value="%" onclick="Percentage">
+        <input type="button" value="%" onclick="calculatePercentage()">
         <input type="button" value="7" onclick="appendToDisplay('7')">
         <input type="button" value="8" onclick="appendToDisplay('8')">
         <input type="button" value="9" onclick="appendToDisplay('9')">
@@ -98,8 +98,59 @@
         function calculateResult() {
             const display = document.getElementById('display');
             try {
-                // Evaluate the expression and display the result
-                display.value = eval(display.value.replace('X', '*').replace('^', '**'));
+                display.value = eval(display.value);
+            } catch (error) {
+                display.value = 'Error';
+            }
+        }
+
+        // Fungsi untuk menghitung persentase
+        function calculatePercentage() {
+            try {
+                let currentText = display.value;
+                if (!currentText) return;
+
+                // Operator yang diperbolehkan
+                const operators = ['+', '-', '*', '/'];
+                let lastOperatorIndex = -1;
+                let lastOperator = '';
+
+                // Cari operator terakhir dalam ekspresi
+                for (let op of operators) {
+                    let pos = currentText.lastIndexOf(op);
+                    if (pos > lastOperatorIndex) {
+                        lastOperatorIndex = pos;
+                        lastOperator = op;
+                    }
+                }
+
+                if (lastOperatorIndex === -1) {
+                    // Tidak ada operator ditemukan, seluruh nomor dianggap sebagai persentase
+                    let number = parseFloat(currentText);
+                    display.value = (number * 0.01).toString();
+                } else {
+                    // Ambil nomor sebelum dan sesudah operator
+                    let beforeOp = currentText.slice(0, lastOperatorIndex);
+                    let afterOp = currentText.slice(lastOperatorIndex + 1);
+
+                    // Jika tidak ada angka setelah operator, berhenti
+                    if (!afterOp) return;
+
+                    let numberBefore = parseFloat(beforeOp) || 0;
+                    let number = parseFloat(afterOp);
+
+                    // Hitung persentase berdasarkan operator
+                    let percentValue;
+                    if (lastOperator === '+' || lastOperator === '-') {
+                        percentValue = numberBefore * (number / 100);
+                    } else if (lastOperator === '*' || lastOperator === '/') {
+                        percentValue = number * 0.01;
+                    }
+
+                    // Ganti angka terakhir dengan nilai persentase
+                    let newExpression = currentText.slice(0, lastOperatorIndex + 1) + percentValue.toString();
+                    display.value = newExpression;
+                }
             } catch (error) {
                 display.value = 'Error';
             }
