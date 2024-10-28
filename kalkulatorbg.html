@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <head>
-    <title>Calculator</title>
+    <title>Calculator by Hamdani</title>
     <style>
         /* Style untuk body halaman */
         body {
@@ -10,7 +10,7 @@
             justify-content: center; /* Pusatkan elemen secara horizontal */
             align-items: center; /* Pusatkan elemen secara vertikal */
             height: 100vh; /* Buat body setinggi tampilan browser */
-            background: url('BlueAikatsu.png') no-repeat center center fixed; /* Menetapkan gambar latar belakang yang tetap dan terpusat */
+            background: url('https://www.pixelstalk.net/wp-content/uploads/images5/Dark-Blue-Aesthetic-Desktop-Background.jpg') no-repeat center center fixed;
             background-size: cover; /* Gambar latar disesuaikan agar menutupi seluruh area */
         }
 
@@ -110,11 +110,15 @@
 
         // Fungsi untuk menghitung hasil dari ekspresi aritmatika yang ada di display
         function calculateResult() {
-            const display = document.getElementById('display'); // Ambil elemen input dengan ID 'display'
+            let display = document.getElementById('display');
+            let expression = display.value;
+
+            expression = expression.replace(/(\d+)%/g, '($1 / 100)');
+
             try {
-                display.value = eval(display.value); // Evaluasi ekspresi matematika di dalam display
+                display.value = eval(expression);
             } catch (error) {
-                display.value = 'Error'; // Jika terjadi kesalahan, tampilkan 'Error'
+                display.value = 'Error';
             }
         }
 
